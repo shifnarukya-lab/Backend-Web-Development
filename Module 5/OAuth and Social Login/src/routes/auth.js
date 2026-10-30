@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 // routes/auth.js — OAuth entry points
 //
 // Route 1 — GET /auth/google
@@ -16,36 +16,42 @@
 //   Use signToken({ sub: req.user.id, role: req.user.role }) — not Google's token.
 //   Respond with: res.json({ token })
 
-const router  = require('express').Router();
-const { passport } = require('../auth/passport');
-const { signToken } = require('../utils/jwt');   // hint: use this
+const router = require("express").Router();
+const { passport } = require("../auth/passport");
+const { signToken } = require("../utils/jwt"); // hint: use this
 
 // ── Given: triggers the OAuth flow ──────────────────────────────────────────
 router.get(
-  '/google',
-  passport.authenticate('google', {
-    scope:   ['openid', 'email', 'profile'],
+  "/google",
+  passport.authenticate("google", {
+    scope: ["openid", "email", "profile"],
     session: false,
   }),
 );
 
 // ── TODO: complete the callback handler ─────────────────────────────────────
 router.get(
-  '/google/callback',
-  passport.authenticate('google', {
-    session:         false,
-    failureRedirect: '/auth/failure',
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: "/auth/failure",
   }),
   (req, res) => {
     // req.user is the user returned by verifyCallback
     // Issue YOUR app JWT here and return it as JSON.
-    res.json({ error: 'not implemented' }); // remove this line when you implement
+    const token = signToken({ sub: req.user.id, role: req.user.role });
+    res.json({ token });
   },
 );
 
 // ── Given: shown when OAuth fails ───────────────────────────────────────────
-router.get('/failure', (_req, res) => {
-  res.status(401).json({ error: { code: 'OAUTH_FAILED', message: 'Google login failed or was denied' } });
+router.get("/failure", (_req, res) => {
+  res.status(401).json({
+    error: {
+      code: "OAUTH_FAILED",
+      message: "Google login failed or was denied",
+    },
+  });
 });
 
 module.exports = router;
