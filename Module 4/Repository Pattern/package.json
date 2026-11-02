@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "description": "LU41 Repository Pattern assignment starter",
-  "main": "src/controllers/postController.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node src/controllers/postController.js"
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
   }
 }
