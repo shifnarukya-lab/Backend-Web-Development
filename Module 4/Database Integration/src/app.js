@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const postController = require('./controllers/postController');
 
 const app = express();
@@ -11,7 +12,9 @@ app.patch('/posts/:id', postController.update);
 app.delete('/posts/:id', postController.remove);
 
 app.use((error, req, res, next) => {
-  res.status(error.statusCode || 500).json({ error: error.message });
+  const statusCode = error.statusCode || 500;
+  const message = statusCode >= 500 ? 'Internal server error' : error.message;
+  res.status(statusCode).json({ error: message });
 });
 
 if (require.main === module) {
